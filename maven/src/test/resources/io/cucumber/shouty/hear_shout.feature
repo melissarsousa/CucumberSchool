@@ -3,19 +3,28 @@ Feature: Hear shout
     Shouty allows users to "hear" other users "shouts" as long as they are close enough to each other.
     You can write a description in here, as long as it doesn't use Cucumber keywords.
 
-    Rule: Shouts can only be heard by other users
-        Scenario: Listener is within range
-            Given a person named Lucy
-            And a person named Sean
+    Rule: Shouts can be heard by other users
+        Scenario: Listener hears a message
+            Given a person named Sean
+            And a person named Lucy
             When Sean shouts "Free bagels at Sean's"
-            Then Lucy hears Sean's message
-        
-        Scenario: Listener hears a different message
-            Given a person named Lucy
-            And a person named Sean
-            When Sean shouts "Free coffee at Sean's"
-            Then Lucy hears Sean's message
+            Then Lucy should hear Sean's message
 
-    Rule: Shouts can only be heard by other users
+    Rule: Shouts should only be heard if listener is within range
         Scenario: Listener is within range
+            Given the range is 100
+            And people are located at
+                | name | location |
+                | Sean | 0 |
+                | Lucy | 50 |
+            When Sean shouts
+            Then Lucy should hear a shout
+
         Scenario: Listener is out of range
+            Given the range is 100
+            And people are located at
+                | name | location |
+                | Sean | 0 |
+                | Larry | 150 |
+            When Sean shouts
+            Then Larry should not hear a shout
