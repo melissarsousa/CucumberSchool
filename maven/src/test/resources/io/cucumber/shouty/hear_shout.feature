@@ -28,3 +28,27 @@ Feature: Hear shout
                 | Larry | 150 |
             When Sean shouts
             Then Larry should not hear a shout
+
+    Rule: Listener should be able to hear multiple shouts
+        Scenario: Two shouts
+            Given a person named Sean
+            And a person named Lucy
+            When Sean shouts "Free bagels!"
+            And Sean shouts "Free toast!"
+            Then Lucy hears the following messages:
+                |Free bagels!|
+                |Free toast!|
+
+    Rule: Maximun length of message is 180 characters
+        Scenario: Message is too long
+            Given a person named Sean
+            And a person named Lucy
+            When Sean shouts the following message
+                """
+                This is a really long message
+                so long in fact that I am not going to
+                be allowed to send it, at least if I keep
+                typing like this until the length is over
+                the limit of 180 characters.
+                """
+            Then Lucy shout not hear a shout

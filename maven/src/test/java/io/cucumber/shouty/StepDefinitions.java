@@ -3,8 +3,8 @@ package io.cucumber.shouty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.*;
-import java.util.List;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
@@ -67,6 +67,9 @@ public class StepDefinitions {
         messageFromSean = message;
     }
 
+    @When("Sean shouts the following message")
+    public 
+
     @Then("Lucy should hear Sean's message")
     public void lucy_hears_Sean_s_message() throws Throwable {
         assertEquals(Collections.singletonList(messageFromSean), people.get("Lucy").getMessagesHeard());
@@ -77,8 +80,20 @@ public class StepDefinitions {
         assertEquals(1, people.get("Lucy").getMessagesHeard().size());
     }
 
-    @Then("Larry should not hear a shout")
-    public void larry_should_not_hear_a_shout() throws Throwable {
-        assertEquals(0, people.get("Larry").getMessagesHeard().size());
+    @Then("{name} should not hear a shout")
+    public void person_should_not_hear_a_shout(String name) throws Throwable {
+        assertEquals(0, people.get(name).getMessagesHeard().size());
     }
+
+    @Then("Lucy hears the following messages:")
+    public void lucy_hears_the_following_messages(DataTable expectedMessages) {
+    List<List<String>> actualMessages = new ArrayList<List<String>>();
+    List<String> heard = people.get("Lucy").getMessagesHeard();
+        for (String message : heard){
+            actualMessages.add(Collections.singletonList(message));
+        }
+        expectedMessages.diff(DataTable.create(actualMessages));
+    }
+
+
 }
